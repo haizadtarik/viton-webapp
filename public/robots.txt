@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://virtualtryon.vercel.app/sitemap.xml
+
+# Disallow development and API routes
+Disallow: /api/
+Disallow: /_next/
+Disallow: /.*
+
+# Allow specific static files
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.webp
+Allow: /*.svg

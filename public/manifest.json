@@ -1,0 +1,64 @@
+{
+  "name": "Virtual Try-On",
+  "short_name": "VirtualTryOn",
+  "description": "AI-powered virtual try-on experience for fashion",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#C6D3F7",
+  "theme_color": "#5B7FFF",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "lifestyle", "photo"],
+  "lang": "en",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshot-narrow.png",
+      "sizes": "640x1136",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Try-On",
+      "short_name": "Try-On",
+      "description": "Start a new virtual try-on session",
+      "url": "/try-on",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
