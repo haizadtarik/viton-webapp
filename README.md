@@ -41,9 +41,10 @@ A modern, responsive virtual try-on web application built with Next.js 14+, Type
    cp .env.local.example .env.local
    ```
    
-   Edit `.env.local` and add your API endpoint:
+   Edit `.env.local` and add your API endpoints:
    ```env
-   NEXT_PUBLIC_TRYON_API_ENDPOINT=your_api_endpoint_here
+   NEXT_PUBLIC_TRYON_API_ENDPOINT=http://localhost:3000/api
+   VITON_BACKEND_URL=your_backend_url_here
    NEXT_PUBLIC_APP_URL=http://localhost:3000
    ```
 
@@ -109,7 +110,8 @@ src/
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `NEXT_PUBLIC_TRYON_API_ENDPOINT` | API endpoint for try-on generation | Yes |
+| `NEXT_PUBLIC_TRYON_API_ENDPOINT` | Frontend API endpoint (usually localhost:3000/api) | Yes |
+| `VITON_BACKEND_URL` | Backend server URL for try-on processing | Yes |
 | `NEXT_PUBLIC_APP_URL` | Base URL for the application | No |
 
 ### Upload Configuration
@@ -118,6 +120,14 @@ src/
 - **Supported formats**: JPEG, PNG, WebP
 - **Auto-compression**: Images > 1MB are compressed
 - **Max dimensions**: 2048x2048px
+
+### API Configuration
+
+- **Request timeout**: 5 minutes (300 seconds)
+- **Retry attempts**: 3
+- **Maximum function duration**: 5 minutes (Vercel Pro/Enterprise plans)
+
+> **Note**: Vercel Hobby plan has a 10-second timeout limit. For try-on generation that may take longer, consider upgrading to Pro plan or using a different deployment platform.
 
 ## 📱 Responsive Breakpoints
 

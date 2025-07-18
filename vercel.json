@@ -1,6 +1,8 @@
 {
-  "env": {
-    "NEXT_PUBLIC_TRYON_API_ENDPOINT": "@tryon-api-endpoint"
+  "functions": {
+    "src/app/api/viton/route.ts": {
+      "maxDuration": 300
+    }
   },
   "headers": [
     {

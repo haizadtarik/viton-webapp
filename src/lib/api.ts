@@ -50,7 +50,7 @@ class TryOnAPI {
     } catch (error) {
       if (error instanceof Error) {
         if (error.name === 'AbortError') {
-          throw new APIError('Request timeout. Please try again.');
+          throw new APIError('Request timeout - the try-on generation is taking longer than expected. Please try again.');
         }
         
         // Network or other errors
