@@ -1,15 +1,14 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { ArrowLeft, ArrowRight, Sparkles, Download, RotateCcw } from 'lucide-react';
-import Link from 'next/link';
+import { Sparkles, Download, RotateCcw } from 'lucide-react';
 import { ImageData } from '@/types';
 import { UploadZone } from '@/components/Upload/UploadZone';
 import { NavigationPills } from '@/components/Navigation/NavigationPills';
 import { ImagePreview } from '@/components/Preview/ImagePreview';
 import { LoadingSpinner } from '@/components/UI/LoadingSpinner';
 import { useTryOn } from '@/hooks/useTryOn';
-import { cn, downloadImage } from '@/lib/utils';
+import { downloadImage } from '@/lib/utils';
 
 type Step = 'model' | 'garment' | 'result';
 
@@ -64,222 +63,136 @@ export default function TryOnPage() {
   const canGenerateResult = modelImage !== null && garmentImage !== null;
 
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="relative min-h-screen py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center space-x-4 mb-4">
-            <Link 
-              href="/" 
-              className="flex items-center text-primary-600 hover:text-primary-700 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Home
-            </Link>
-          </div>
-          
-          <h1 className="text-4xl font-bold text-text-dark mb-4">
-            Virtual Try-On Studio
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+            {currentStep === 'model' && 'Choose Your Model Image'}
+            {currentStep === 'garment' && 'Provide Garment'}
+            {currentStep === 'result' && 'Virtual Try-On Result'}
           </h1>
-          <p className="text-lg text-text-medium max-w-2xl mx-auto">
-            Upload a model photo and a garment image to see how they look together using AI-powered virtual try-on technology.
-          </p>
+          {currentStep !== 'result' && (
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              {currentStep === 'model'
+                ? 'Upload a photo of your model to get started.'
+                : 'Now, provide the garment you want to see on the model.'}
+            </p>
+          )}
         </div>
-
-        {/* Navigation Pills */}
-        <NavigationPills 
-          currentStep={currentStep}
-          completedSteps={completedSteps}
-          className="mb-8"
-        />
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 max-w-2xl mx-auto">
-            <p className="text-red-700 text-center">{error}</p>
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-6 max-w-2xl mx-auto" role="alert">
+            <span className="block sm:inline">{error}</span>
           </div>
         )}
 
-        {/* Model Upload Step */}
-        {currentStep === 'model' && (
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <div className="text-center mb-6">
-                <h2 className="text-2xl font-semibold text-text-dark mb-2">
-                  Upload Model Photo
-                </h2>
-                <p className="text-text-medium">
-                  Choose a clear photo of a person to serve as your model
-                </p>
-              </div>
+        {/* Main Content */}
+        <main className="w-full flex-grow flex flex-col items-center pb-32">
+          {currentStep === 'model' && (
+            <div className="w-full max-w-md">
+              <UploadZone 
+                onImageUpload={handleModelUpload} 
+                title="Drop your photo here"
+                subtitle="Upload a clear photo of your model"
+              />
+            </div>
+          )}
 
-              {modelImage ? (
-                <div className="space-y-6">
+          {currentStep === 'garment' && (
+            <div className="flex flex-col md:flex-row items-start justify-center gap-8 w-full max-w-4xl">
+              <div className="flex flex-col items-center gap-4">
+                <h2 className="text-xl font-semibold text-gray-700">Your Model</h2>
+                {modelImage && (
                   <ImagePreview
                     src={modelImage.preview || `data:image/jpeg;base64,${modelImage.base64}`}
-                    alt="Model Photo"
+                    alt="Model"
                     onRemove={() => setModelImage(null)}
-                    title="Model Photo"
+                    title="Your Model"
                   />
-                  <div className="flex justify-center space-x-4">
-                    <button
-                      onClick={() => setCurrentStep('garment')}
-                      className="btn btn-primary btn-lg"
-                    >
-                      Continue to Garment
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <UploadZone
-                  onImageUpload={handleModelUpload}
-                  title="Upload Model Photo"
-                  subtitle="Perfect for showcasing how garments will look"
-                />
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Garment Upload Step */}
-        {currentStep === 'garment' && (
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <div className="text-center mb-6">
-                <h2 className="text-2xl font-semibold text-text-dark mb-2">
-                  Upload Garment
-                </h2>
-                <p className="text-text-medium">
-                  Choose the clothing item you want to try on your model
-                </p>
+                )}
               </div>
-
-              {garmentImage ? (
-                <div className="space-y-6">
+              <div className="flex flex-col items-center gap-4">
+                <h2 className="text-xl font-semibold text-gray-700">The Garment</h2>
+                {garmentImage ? (
                   <ImagePreview
                     src={garmentImage.preview || `data:image/jpeg;base64,${garmentImage.base64}`}
                     alt="Garment"
                     onRemove={() => setGarmentImage(null)}
-                    title="Garment"
+                    title="The Garment"
                   />
-                  <div className="flex justify-center space-x-4">
-                    <button
-                      onClick={() => setCurrentStep('model')}
-                      className="btn btn-secondary btn-lg"
-                    >
-                      <ArrowLeft className="w-5 h-5 mr-2" />
-                      Back to Model
-                    </button>
-                    <button
-                      onClick={handleGenerateTryOn}
-                      disabled={!canGenerateResult || isGenerating}
-                      className={cn(
-                        'btn btn-lg',
-                        canGenerateResult ? 'btn-primary' : 'btn-disabled'
-                      )}
-                    >
-                      {isGenerating ? (
-                        <>
-                          <LoadingSpinner className="w-5 h-5 mr-2" />
-                          Generating...
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="w-5 h-5 mr-2" />
-                          Generate Try-On
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  <UploadZone
+                ) : (
+                  <UploadZone 
                     onImageUpload={handleGarmentUpload}
-                    title="Upload Garment"
-                    subtitle="Shirts, dresses, jackets, and more"
+                    title="Drop garment here"
+                    subtitle="Upload the clothing item"
                   />
-                  <div className="flex justify-center">
-                    <button
-                      onClick={() => setCurrentStep('model')}
-                      className="btn btn-secondary btn-lg"
-                    >
-                      <ArrowLeft className="w-5 h-5 mr-2" />
-                      Back to Model
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Result Step */}
-        {currentStep === 'result' && (
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <div className="text-center mb-6">
-                <h2 className="text-2xl font-semibold text-text-dark mb-2">
-                  Virtual Try-On Result
-                </h2>
-                <p className="text-text-medium">
-                  Here's how the garment looks on your model
-                </p>
+                )}
               </div>
+            </div>
+          )}
 
+          {currentStep === 'garment' && canGenerateResult && (
+            <div className="mt-8">
+              <button
+                onClick={handleGenerateTryOn}
+                disabled={isGenerating}
+                className="btn btn-primary btn-lg group"
+              >
+                {isGenerating ? (
+                  <>
+                    <LoadingSpinner className="w-6 h-6 mr-2" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-6 h-6 mr-2 transition-transform duration-300 group-hover:scale-110" />
+                    Generate Try-On
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+
+          {currentStep === 'result' && (
+            <div className="w-full max-w-5xl">
               {isGenerating ? (
                 <div className="flex flex-col items-center justify-center py-16">
-                  <LoadingSpinner className="w-16 h-16 mb-4" />
-                  <h3 className="text-xl font-semibold text-text-dark mb-2">
-                    Generating Your Try-On...
+                  <LoadingSpinner className="w-16 h-16 mb-4 text-primary-600" />
+                  <h3 className="text-2xl font-semibold text-gray-800 mb-2">
+                    Generating Your Masterpiece...
                   </h3>
-                  <p className="text-text-medium">
-                    This may take a few moments
+                  <p className="text-gray-500">
+                    This may take a few moments. Good things come to those who wait!
                   </p>
                 </div>
               ) : result ? (
                 <div className="space-y-8">
-                  {/* Result Grid */}
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Original Model */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-text-dark text-center">
-                        Original Model
-                      </h3>
-                      {modelImage && (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {modelImage && (
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-semibold text-center text-gray-700">Original Model</h3>
                         <ImagePreview
                           src={modelImage.preview || `data:image/jpeg;base64,${modelImage.base64}`}
                           alt="Original Model"
-                          onRemove={() => {}}
-                          title=""
                           showControls={false}
                         />
-                      )}
-                    </div>
-
-                    {/* Garment */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-text-dark text-center">
-                        Garment
-                      </h3>
-                      {garmentImage && (
+                      </div>
+                    )}
+                    {garmentImage && (
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-semibold text-center text-gray-700">Garment</h3>
                         <ImagePreview
                           src={garmentImage.preview || `data:image/jpeg;base64,${garmentImage.base64}`}
                           alt="Garment"
-                          onRemove={() => {}}
-                          title=""
                           showControls={false}
                         />
-                      )}
-                    </div>
-
-                    {/* Result */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-text-dark text-center">
-                        Try-On Result
-                      </h3>
-                      <div className="bg-gray-50 rounded-lg overflow-hidden">
+                      </div>
+                    )}
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-semibold text-center text-gray-700">Result</h3>
+                      <div className="rounded-2xl overflow-hidden shadow-lg">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={`data:image/png;base64,${result.result_image}`}
@@ -289,69 +202,45 @@ export default function TryOnPage() {
                       </div>
                     </div>
                   </div>
-
-                  {/* Action Buttons */}
                   <div className="flex flex-wrap justify-center gap-4">
-                    <button
-                      onClick={handleDownload}
-                      className="btn btn-primary btn-lg"
-                    >
+                    <button onClick={handleDownload} className="btn btn-primary">
                       <Download className="w-5 h-5 mr-2" />
-                      Download Result
+                      Download
                     </button>
-                    <button
-                      onClick={() => setCurrentStep('garment')}
-                      className="btn btn-secondary btn-lg"
-                    >
-                      <ArrowLeft className="w-5 h-5 mr-2" />
-                      Try Different Garment
-                    </button>
-                    <button
-                      onClick={handleReset}
-                      className="btn btn-outline btn-lg"
-                    >
+                    <button onClick={handleReset} className="btn btn-outline">
                       <RotateCcw className="w-5 h-5 mr-2" />
                       Start Over
                     </button>
                   </div>
-
-                  {/* Processing Time */}
-                  {result.processing_time && (
-                    <div className="text-center text-sm text-text-light">
-                      Generated in {(result.processing_time / 1000).toFixed(1)} seconds
-                    </div>
-                  )}
                 </div>
               ) : (
-                <div className="text-center py-16">
+                 <div className="text-center py-16">
                   <h3 className="text-xl font-semibold text-text-dark mb-2">
                     No Result Yet
                   </h3>
                   <p className="text-text-medium mb-6">
-                    Upload both a model and garment to generate a try-on result
+                    Something went wrong. Please try generating the result again.
                   </p>
                   <button
-                    onClick={() => setCurrentStep('model')}
+                    onClick={() => setCurrentStep('garment')}
                     className="btn btn-primary btn-lg"
                   >
-                    Start Try-On Process
+                    Go Back
                   </button>
                 </div>
               )}
             </div>
-          </div>
-        )}
+          )}
+        </main>
+      </div>
 
-        {/* Bottom Navigation */}
-        <div className="mt-12 text-center">
-          <Link 
-            href="/" 
-            className="inline-flex items-center text-text-medium hover:text-primary-600 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Homepage
-          </Link>
-        </div>
+      {/* Floating Navigation Dock */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+        <NavigationPills 
+          currentStep={currentStep}
+          completedSteps={completedSteps}
+          onStepClick={(step) => setCurrentStep(step as Step)}
+        />
       </div>
     </div>
   );
