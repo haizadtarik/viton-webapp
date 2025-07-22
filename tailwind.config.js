@@ -47,6 +47,7 @@ module.exports = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'gradient-main': 'linear-gradient(to bottom, #C6D3F7, #B8C9F1)',
+        'background-gradient': 'linear-gradient(to br, #dbeafe, #e9d5ff)',
       },
       animation: {
         'pulse-soft': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
