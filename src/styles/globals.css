@@ -144,28 +144,64 @@
 
   /* Upload zone styles */
   .upload-zone {
-    border: 2px dashed #d1d5db;
+    border: 3px dashed #9ca3af;
     border-radius: 1rem;
-    padding: 2rem;
+    padding: 3rem 2rem;
     text-align: center;
-    transition-property: color, background-color, border-color;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
+    transition-duration: 200ms;
+    position: relative;
+  }
+
+  .upload-zone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(91, 127, 255, 0.1), rgba(230, 126, 34, 0.1));
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+    pointer-events: none;
   }
 
   .upload-zone:hover {
-    border-color: #60a5fa;
-    background-color: rgba(96, 165, 250, 0.05);
+    border-color: #5B7FFF;
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(91, 127, 255, 0.15);
+  }
+
+  .upload-zone:hover::before {
+    opacity: 1;
   }
 
   .upload-zone.active {
-    border-color: #5B7FFF;
-    background-color: rgba(91, 127, 255, 0.05);
+    border-color: #E67E22;
+    background-color: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px rgba(230, 126, 34, 0.2);
+  }
+
+  .upload-zone.active::before {
+    opacity: 1;
+    background: linear-gradient(135deg, rgba(230, 126, 34, 0.15), rgba(91, 127, 255, 0.15));
   }
 
   .upload-zone.error {
-    border-color: #f87171;
-    background-color: rgba(248, 113, 113, 0.05);
+    border-color: #ef4444;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .upload-zone.error::before {
+    opacity: 1;
+    background: rgba(248, 113, 113, 0.1);
   }
 
   /* Navigation pills */
@@ -205,31 +241,34 @@
   .tab {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
     font-size: 0.875rem;
     font-weight: 500;
     transition-property: color, background-color, border-color;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
     border: 1px solid;
+    text-align: center;
+    min-height: 2.5rem;
   }
 
   .tab.active {
     background-color: #E67E22;
     color: white;
-    border-color: #E67E22;
+    border-color: transparent;
   }
 
   .tab.inactive {
-    background-color: white;
+    background-color: transparent;
     color: #6b7280;
-    border-color: #d1d5db;
+    border-color: transparent;
   }
 
   .tab.inactive:hover {
-    background-color: #f9fafb;
+    background-color: rgba(255, 255, 255, 0.7);
   }
 
   /* Loading spinner */

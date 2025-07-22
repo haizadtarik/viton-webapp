@@ -90,7 +90,7 @@ export function UploadZone({
   return (
     <div className={cn('space-y-6', className)}>
       {/* Tab Selector */}
-      <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
+      <div className="flex space-x-1 bg-gray-200/75 backdrop-blur-sm rounded-full p-1">
         {tabOptions.map((tab) => {
           const Icon = tab.icon;
           return (
@@ -133,24 +133,30 @@ export function UploadZone({
             disabled={disabled}
           />
           
-          <div className="space-y-4">
-            {isUploading ? (
-              <Loader2 className="w-12 h-12 text-primary-500 mx-auto animate-spin" />
-            ) : (
-              <Upload className="w-12 h-12 text-gray-400 mx-auto" />
-            )}
-            
-            <div>
-              <h3 className="text-lg font-semibold text-text-dark mb-2">{title}</h3>
-              {subtitle && (
-                <p className="text-text-medium">{subtitle}</p>
+          <div className="flex flex-col items-center justify-center space-y-6 w-full max-w-md mx-auto">
+            <div className="flex flex-col items-center space-y-4">
+              {isUploading ? (
+                <Loader2 className="w-16 h-16 text-primary-500 animate-spin" />
+              ) : (
+                <div className="p-4 rounded-full bg-gray-100/80 backdrop-blur-sm">
+                  <Upload className="w-12 h-12 text-gray-500" />
+                </div>
               )}
-              <p className="text-sm text-text-light mt-2">
-                Drop your photo here or click to browse
-              </p>
-              <p className="text-xs text-text-light mt-1">
-                Supports JPEG, PNG, WebP (max {Math.round(maxSize / (1024 * 1024))}MB)
-              </p>
+              
+              <div className="text-center space-y-3">
+                <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
+                {subtitle && (
+                  <p className="text-gray-600 text-base">{subtitle}</p>
+                )}
+                <div className="space-y-2">
+                  <p className="text-gray-700 font-medium">
+                    Drop your photo here or click to browse
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Supports JPEG, PNG, WebP (max {Math.round(maxSize / (1024 * 1024))}MB)
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -159,22 +165,26 @@ export function UploadZone({
       {/* Camera Capture */}
       {activeTab === 'camera' && (
         <div className="upload-zone">
-          <div className="space-y-4">
-            <Camera className="w-12 h-12 text-gray-400 mx-auto" />
-            <div>
-              <h3 className="text-lg font-semibold text-text-dark mb-2">Take a Photo</h3>
-              <p className="text-text-medium mb-4">Use your camera to capture a photo</p>
-              <button
-                onClick={() => {
-                  // TODO: Implement camera capture
-                  console.log('Camera capture not implemented yet');
-                }}
-                className="btn btn-primary btn-md"
-                disabled={disabled}
-              >
-                <Camera className="w-4 h-4 mr-2" />
-                Open Camera
-              </button>
+          <div className="flex flex-col items-center justify-center space-y-6 w-full max-w-md mx-auto">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="p-4 rounded-full bg-gray-100/80 backdrop-blur-sm">
+                <Camera className="w-12 h-12 text-gray-500" />
+              </div>
+              <div className="text-center space-y-4">
+                <h3 className="text-xl font-semibold text-gray-800">Take a Photo</h3>
+                <p className="text-gray-600 text-base">Use your camera to capture a photo</p>
+                <button
+                  onClick={() => {
+                    // TODO: Implement camera capture
+                    console.log('Camera capture not implemented yet');
+                  }}
+                  className="btn btn-primary btn-md"
+                  disabled={disabled}
+                >
+                  <Camera className="w-4 h-4 mr-2" />
+                  Open Camera
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -183,31 +193,35 @@ export function UploadZone({
       {/* URL Input */}
       {activeTab === 'url' && (
         <div className="upload-zone">
-          <div className="space-y-4">
-            <Link2 className="w-12 h-12 text-gray-400 mx-auto" />
-            <div className="w-full max-w-md mx-auto">
-              <h3 className="text-lg font-semibold text-text-dark mb-2">Image URL</h3>
-              <p className="text-text-medium mb-4">Enter a direct link to an image</p>
-              <div className="flex space-x-2">
-                <input
-                  type="url"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="https://example.com/image.jpg"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  disabled={disabled || isUploading}
-                />
-                <button
-                  onClick={handleUrlSubmit}
-                  disabled={!imageUrl.trim() || disabled || isUploading}
-                  className="btn btn-primary btn-md"
-                >
-                  {isUploading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    'Load'
-                  )}
-                </button>
+          <div className="flex flex-col items-center justify-center space-y-6 w-full max-w-md mx-auto">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="p-4 rounded-full bg-gray-100/80 backdrop-blur-sm">
+                <Link2 className="w-12 h-12 text-gray-500" />
+              </div>
+              <div className="text-center space-y-4 w-full">
+                <h3 className="text-xl font-semibold text-gray-800">Image URL</h3>
+                <p className="text-gray-600 text-base">Enter a direct link to an image</p>
+                <div className="flex flex-col sm:flex-row gap-3 w-full">
+                  <input
+                    type="url"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
+                    disabled={disabled || isUploading}
+                  />
+                  <button
+                    onClick={handleUrlSubmit}
+                    disabled={!imageUrl.trim() || disabled || isUploading}
+                    className="btn btn-primary btn-md whitespace-nowrap"
+                  >
+                    {isUploading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      'Load Image'
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

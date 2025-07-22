@@ -74,8 +74,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
       </head>
-      <body className={`${inter.className} antialiased`}>
-        <div className="min-h-screen bg-gradient-main">
+      <body className={`${inter.className} antialiased bg-background-gradient`}>
+        <div className="min-h-screen">
           <main className="relative">
             {children}
           </main>

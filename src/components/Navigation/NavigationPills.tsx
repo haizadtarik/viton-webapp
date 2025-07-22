@@ -7,6 +7,7 @@ interface NavigationPillsProps {
   currentStep: string;
   completedSteps: string[];
   className?: string;
+  onStepClick?: (step: string) => void;
 }
 
 const steps = [
@@ -18,23 +19,33 @@ const steps = [
 export function NavigationPills({ 
   currentStep, 
   completedSteps, 
-  className 
+  className,
+  onStepClick 
 }: NavigationPillsProps) {
   return (
-    <div className={cn('flex justify-center space-x-4', className)}>
-      {steps.map((step, index) => {
+    <div className={cn(
+      'bg-white/80 backdrop-blur-lg rounded-full px-6 py-3 shadow-lg border border-white/20',
+      'flex items-center space-x-2',
+      className
+    )}>
+      {steps.map((step) => {
         const Icon = step.icon;
         const isActive = currentStep === step.id;
         const isCompleted = completedSteps.includes(step.id);
+        const canClick = isCompleted || isActive;
         
         return (
-          <div
+          <button
             key={step.id}
+            onClick={() => canClick && onStepClick?.(step.id)}
+            disabled={!canClick}
             className={cn(
-              'nav-pill',
-              isActive && 'active',
-              isCompleted && !isActive && 'completed',
-              !isActive && !isCompleted && 'inactive'
+              'flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200',
+              'text-sm font-medium',
+              isActive && 'bg-blue-500 text-white shadow-md',
+              isCompleted && !isActive && 'bg-green-100 text-green-700 hover:bg-green-200',
+              !isActive && !isCompleted && 'text-gray-400 cursor-not-allowed',
+              canClick && !isActive && 'hover:bg-gray-100'
             )}
           >
             <div className="flex items-center space-x-2">
@@ -43,14 +54,9 @@ export function NavigationPills({
               ) : (
                 <Icon className="w-4 h-4" />
               )}
-              <span className="hidden sm:inline">{step.label}</span>
+              <span>{step.label}</span>
             </div>
-            
-            {/* Step number for mobile */}
-            <span className="sm:hidden text-xs">
-              {index + 1}
-            </span>
-          </div>
+          </button>
         );
       })}
     </div>
